@@ -1,29 +1,23 @@
 import React, {Component} from "react";
+import {getCocktails} from "../../store/cocktailsReducer/actions";
+import { connect } from "react-redux";
 import {View, Text, Image, ScrollView, StyleSheet} from "react-native";
 
 
 class CocktailsList extends Component{
-    constructor(props){
-        super(props);
-        this.state = { 
-            list : []
-        }
-    }
-
+   
     async componentDidMount(){
-        let data = await (await fetch("https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=Cocktail")).json(); 
-        console.log(data)
-        this.setState({list : data})
+        this.props.getCocktails()
     }
     render(){
         return(
             <ScrollView>
-                {this.state.list.drinks ? this.state.list.drinks.map((drink)=>
+                {this.props.list.drinks ? this.props.list.drinks.map((drink)=>
                     <View key={drink.iddrink} style={style.card}>
                         <Image style={style.image} source={{uri:drink.strDrinkThumb}}/>
-                        <Text>{drink.strDrink}</Text>
+                        <Text style={style.title}>{drink.strDrink}</Text>
                     </View>
-                ) : <Text> Loading... </Text>}
+                ) : <Text> {this.props.status} </Text>}
             </ScrollView>
         )
     }
@@ -36,8 +30,25 @@ const style = StyleSheet.create({
     }, 
     card : {
         flexDirection : "row",
-        marginBottom : 10
+        marginBottom : 10,
+        alignItems : "center"
+    }, 
+    title : {
+        color : "#7E7E7E",
+        marginLeft : 20
     }
 })
 
-export default CocktailsList;
+const mapStateToProps = (state) => {
+    return{
+        status : state.cocktails.status,
+        list : state.cocktails.list,
+        error : state.cocktails.error
+    }
+}
+
+const mapDispathToProps = { 
+    getCocktails
+}
+
+export default connect(mapStateToProps, mapDispathToProps)(CocktailsList);
