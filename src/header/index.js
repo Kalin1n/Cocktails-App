@@ -6,7 +6,7 @@ function Header(){
     return(
         <View style={style.container}>
             <Text style={style.text}>Drinks</Text>
-            <Image source={require("../../assets/Icon.png")}/ >
+            <Image source={require("../../assets/icon.png")}/ >
         </View>
     )
 };

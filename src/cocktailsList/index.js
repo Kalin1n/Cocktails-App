@@ -5,19 +5,26 @@ import {View, Text, Image, ScrollView, StyleSheet} from "react-native";
 
 
 class CocktailsList extends Component{
-   
+    constructor(){
+        super();
+        this.state = { 
+            list : [],
+            loaded : false
+        }
+    }
     async componentDidMount(){
-        this.props.getCocktails()
+        let data = await (await fetch("https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=Cocktail")).json()
+        this.setState({list : data})
     }
     render(){
         return(
             <ScrollView>
-                {this.props.list.drinks ? this.props.list.drinks.map((drink)=>
+                {this.state.list.drinks ? this.state.list.drinks.map((drink)=>
                     <View key={drink.iddrink} style={style.card}>
                         <Image style={style.image} source={{uri:drink.strDrinkThumb}}/>
                         <Text style={style.title}>{drink.strDrink}</Text>
                     </View>
-                ) : <Text> {this.props.status} </Text>}
+                ) : <Text> Loading... </Text>}
             </ScrollView>
         )
     }
@@ -39,16 +46,5 @@ const style = StyleSheet.create({
     }
 })
 
-const mapStateToProps = (state) => {
-    return{
-        status : state.cocktails.status,
-        list : state.cocktails.list,
-        error : state.cocktails.error
-    }
-}
 
-const mapDispathToProps = { 
-    getCocktails
-}
-
-export default connect(mapStateToProps, mapDispathToProps)(CocktailsList);
+export default CocktailsList;
