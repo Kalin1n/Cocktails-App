@@ -1,6 +1,4 @@
 import React, {Component} from "react";
-import {getCocktails} from "../../store/cocktailsReducer/actions";
-import { connect } from "react-redux";
 import {View, Text, Image, ScrollView, StyleSheet} from "react-native";
 
 
